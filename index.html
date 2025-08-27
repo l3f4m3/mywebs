@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>IMEI Scanner PWA</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkVzY8OhbmVyIElNRUkiLAogICJzaG9ydF9uYW1lIjogIklNRUkgU2Nhbm5lciIsCiAgImRlc2NyaXB0aW9uIjogIkVzY2FuZWFkb3IgZGUgSU1FSSBjb24gY8OhbWFyYSBpbnRlZ3JhZGEiLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAiZnVsbHNjcmVlbiIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzY2N2VlYSIsCiAgInRoZW1lX2NvbG9yIjogIiM2NjdlZWEiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1UTTRJaUJvWldsbmFIUTlJakV6T0NJZ2RtbGxkMEp2ZUQwaU1DQXdJREV6T0NBeE16Z2lJR1pwYkd3OUltNXZibVVpSUhodGJHNXpQU0pvZEhSd09pOHZkM2QzTG5jekxtOXlaeTh5TURBd0wzTjJaeUkrUEhKbFkzUWdkMmxrZEdnOUlqRXpPQ0lnYUdWcFoyaDBQU0l4TXpnaUlHWnBiR3c5SWlNMk5qZGxaV0VpTHo0OEwzTjJaejQ9IiwKICAgICAgInNpemVzIjogIjEzOHgxMzgiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0sCiAgImNhdGVnb3JpZXMiOiBbInV0aWxpdGllcyIsICJ0b29scyJdCn0=">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTM4IiBoZWlnaHQ9IjEzOCIgdmlld0JveD0iMCAwIDEzOCAxMzgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEzOCIgaGVpZ2h0PSIxMzgiIGZpbGw9IiM2NjdlZWEiLz48L3N2Zz4=">
+    
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="IMEI Scanner">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTM4IiBoZWlnaHQ9IjEzOCIgdmlld0JveD0iMCAwIDEzOCAxMzgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEzOCIgaGVpZ2h0PSIxMzgiIGZpbGw9IiM2NjdlZWEiLz48L3N2Zz4=">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .pwa-install-banner {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1002;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .pwa-install-banner.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .pwa-install-banner h4 {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .pwa-install-banner p {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .pwa-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .pwa-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pwa-btn.install {
+            background: rgba(255,255,255,0.9);
+            color: #28a745;
+        }
+
+        .pwa-btn.dismiss {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 15px 20px 15px;
+            text-align: center;
+            flex-shrink: 0;
+            padding-top: max(25px, env(safe-area-inset-top));
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .app-status {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scanner-container {
+            position: relative;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            height: 300px;
+            background: #f8f9fa;
+        }
+
+        #scanner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 1.1rem;
+            position: relative;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #scanner video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scanner-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            pointer-events: none;
+            display: none;
+        }
+
+        .scanner-overlay::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            right: 15%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            animation: scan 2s linear infinite;
+            box-shadow: 0 0 15px #667eea;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-120px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(120px); opacity: 0; }
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 18px 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled::before {
+            display: none;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px 15px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .imei-list {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            flex: 1;
+            min-height: 350px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .imei-list h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .count-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 1rem;
+            min-width: 40px;
+            font-weight: 700;
+        }
+
+        .imei-container {
+            max-height: 400px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .imei-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 12px;
+            border-radius: 15px;
+            position: relative;
+            transition: all 0.2s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .imei-item:active {
+            transform: scale(0.98);
+            background: #e9ecef;
+        }
+
+        .imei-code {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            color: #495057;
+            font-weight: bold;
+            margin-bottom: 8px;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .imei-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .imei-source {
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:active {
+            background: #c82333;
+            transform: scale(0.9);
+        }
+
+        .status {
+            position: fixed;
+            top: 25px;
+            left: 20px;
+            right: 20px;
+            padding: 18px 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            z-index: 1000;
+            transform: translateY(-120px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .status.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .status.success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f1b2b7 100%);
+            color: #721c24;
+            border: 2px solid #f1b2b7;
+        }
+
+        .status.info {
+            background: linear-gradient(135deg, #cce7ff 0%, #b3d9ff 100%);
+            color: #004085;
+            border: 2px solid #b3d9ff;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #6c757d;
+            padding: 50px 20px;
+            line-height: 1.6;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .share-modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 25px 25px 0 0;
+            padding: 30px 25px;
+            padding-bottom: max(30px, env(safe-area-inset-bottom));
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.2);
+        }
+
+        .share-modal.show {
+            transform: translateY(0);
+        }
+
+        .share-modal h3 {
+            margin-bottom: 25px;
+            text-align: center;
+            color: #495057;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Manual input fallback */
+        .manual-input {
+            background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: #212529;
+        }
+
+        .manual-input h4 {
+            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .manual-input input {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .manual-input button {
+            width: 100%;
+            padding: 18px;
+            background: rgba(33, 37, 41, 0.8);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-height: 700px) {
+            .scanner-container {
+                height: 220px;
+            }
+            
+            .header {
+                padding: 20px 15px 15px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.7rem;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .stat-card:last-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        /* PWA specific styles */
+        @media (display-mode: standalone) {
+            .pwa-install-banner {
+                display: none !important;
+            }
+            
+            .app-status::before {
+                content: "📱 ";
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PWA Install Banner -->
+    <div id="pwaInstallBanner" class="pwa-install-banner">
+        <h4>📱 ¡Instalar como App!</h4>
+        <p>Instala esta app en tu teléfono para una mejor experiencia</p>
+        <div class="pwa-buttons">
+            <button class="pwa-btn install" id="pwaInstallBtn">✅ Instalar</button>
+            <button class="pwa-btn dismiss" id="pwaDismissBtn">❌ Ahora no</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>📱 IMEI Scanner</h1>
+            <p>Aplicación Web Progresiva</p>
+            <div class="app-status">
+                🌐 Versión Web - Se puede instalar como app
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="status" class="status"></div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalScanned">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="sessionTime">00:00</div>
+                    <div class="stat-label">Tiempo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgPerMin">0.0</div>
+                    <div class="stat-label">Por Min</div>
+                </div>
+            </div>
+
+            <div class="scanner-container">
+                <div id="scanner">
+                    <div>
+                        📷 Presiona <strong>"INICIAR CÁMARA"</strong> para comenzar a escanear códigos EAN
+                        <br><br>
+                        <small>Apunta a códigos de barras EAN de celulares para extraer el IMEI</small>
+                    </div>
+                </div>
+                <div class="scanner-overlay" id="scannerOverlay"></div>
+            </div>
+
+            <!-- Fallback manual input -->
+            <div class="manual-input">
+                <h4>✍️ Ingreso Manual (Backup)</h4>
+                <input type="text" id="manualInput" placeholder="Ingresa IMEI (15 dígitos)" maxlength="15" pattern="[0-9]{15}">
+                <button onclick="scanner.addManualIMEI()">➕ AGREGAR IMEI</button>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" id="startScanner">
+                    🚀 INICIAR CÁMARA
+                </button>
+                <button class="btn btn-secondary" id="stopScanner" disabled>
+                    ⏹️ DETENER
+                </button>
+                <button class="btn btn-success" id="shareData" disabled>
+                    📤 COMPARTIR
+                </button>
+                <button class="btn btn-danger" id="clearAll">
+                    🗑️ LIMPIAR
+                </button>
+            </div>
+
+            <div class="imei-list">
+                <h3>
+                    📋 IMEI Registrados 
+                    <span class="count-badge" id="imeiCount">0</span>
+                </h3>
+                <div class="imei-container" id="imeiContainer">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📱</div>
+                        <strong>No hay IMEI escaneados aún</strong><br>
+                        Utiliza la cámara para escanear códigos EAN o ingresa manualmente.
+                        <br><br>
+                        <small><em>Los IMEI deben tener exactamente 15 dígitos numéricos</em></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="share-modal" id="shareModal">
+        <h3>📤 Exportar Datos</h3>
+        <div class="share-options">
+            <button class="btn btn-success" id="downloadTxt">
+                📥 Descargar TXT
+            </button>
+            <button class="btn btn-success" id="shareNative">
+                📱 Compartir
+            </button>
+            <button class="btn btn-secondary" id="copyToClipboard">
+                📋 Copiar
+            </button>
+            <button class="btn btn-danger" id="closeModal">
+                ❌ Cerrar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    const CACHE_NAME = 'imei-scanner-v1';
+                    const urlsToCache = ['/'];
+                    
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then(cache => cache.addAll(urlsToCache))
+                        );
+                    });
+                    
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then(response => response || fetch(event.request))
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swURL = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swURL)
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        const pwaInstallBanner = document.getElementById('pwaInstallBanner');
+        const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+        const pwaDismissBtn = document.getElementById('pwaDismissBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install banner after 3 seconds
+            setTimeout(() => {
+                pwaInstallBanner.classList.add('show');
+            }, 3000);
+        });
+
+        pwaInstallBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredPrompt = null;
+            }
+            pwaInstallBanner.classList.remove('show');
+        });
+
+        pwaDismissBtn.addEventListener('click', () => {
+            pwaInstallBanner.classList.remove('show');
+        });
+
+        // Main Scanner Class
+        class PWAIMEIScanner {
+            constructor() {
+                this.scannedIMEIs = [];
+                this.isScanning = false;
+                this.sessionStartTime = Date.now();
+                this.sessionTimer = null;
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.startSessionTimer();
+                this.loadFromStorage();
+                this.setupMobileOptimizations();
+            }
+
+            initializeElements() {
+                this.elements = {
+                    startBtn: document.getElementById('startScanner'),
+                    stopBtn: document.getElementById('stopScanner'),
+                    shareBtn: document.getElementById('shareData'),
+                    clearBtn: document.getElementById('clearAll'),
+                    scanner: document.getElementById('scanner'),
+                    scannerOverlay: document.getElementById('scannerOverlay'),
+                    status: document.getElementById('status'),
+                    imeiContainer: document.getElementById('imeiContainer'),
+                    imeiCount: document.getElementById('imeiCount'),
+                    totalScanned: document.getElementById('totalScanned'),
+                    sessionTime: document.getElementById('sessionTime'),
+                    avgPerMin: document.getElementById('avgPerMin'),
+                    shareModal: document.getElementById('shareModal'),
+                    modalOverlay: document.getElementById('modalOverlay'),
+                    downloadBtn: document.getElementById('downloadTxt'),
+                    shareNative: document.getElementById('shareNative'),
+                    copyBtn: document.getElementById('copyToClipboard'),
+                    closeModal: document.getElementById('closeModal'),
+                    manualInput: document.getElementById('manualInput')
+                };
+            }
+
+            bindEvents() {
+                this.elements.startBtn.addEventListener('click', () => this.startScanning());
+                this.elements.stopBtn.addEventListener('click', () => this.stopScanning());
+                this.elements.shareBtn.addEventListener('click', () => this.showShareModal());
+                this.elements.clearBtn.addEventListener('click', () => this.clearAll());
+                
+                // Manual input
+                this.elements.manualInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                });
+
+                // Modal events
+                this.elements.downloadBtn.addEventListener('click', () => this.downloadTxt());
+                this.elements.shareNative.addEventListener('click', () => this.shareNative());
+                this.elements.copyBtn.addEventListener('click', () => this.copyToClipboard());
+                this.elements.closeModal.addEventListener('click', () => this.hideShareModal());
+                this.elements.modalOverlay.addEventListener('click', () => this.hideShareModal());
+
+                // Handle page visibility
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden' && this.isScanning) {
+                        this.pauseScanning();
+                    }
+                });
+            }
+
+            setupMobileOptimizations() {
+                this.vibrationSupported = 'vibrate' in navigator;
+            }
+
+            startSessionTimer() {
+                this.sessionTimer = setInterval(() => {
+                    const elapsed = Date.now() - this.sessionStartTime;
+                    const minutes = Math.floor(elapsed / 60000);
+                    const seconds = Math.floor((elapsed % 60000) / 1000);
+                    this.elements.sessionTime.textContent = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    // Calculate average per minute
+                    const totalMinutes = elapsed / 60000;
+                    const avgPerMin = totalMinutes > 0 ? (this.scannedIMEIs.length / totalMinutes).toFixed(1) : '0.0';
+                    this.elements.avgPerMin.textContent = avgPerMin;
+                }, 1000);
+            }
+
+            async startScanning() {
+                try {
+                    this.showStatus('info', '🔄 Activando cámara...');
+                    
+                    // Check camera permissions
+                    if (navigator.permissions) {
+                        const permissions = await navigator.permissions.query({name: 'camera'});
+                        if (permissions.state === 'denied') {
+                            this.showStatus('error', '❌ Permisos de cámara denegados');
+                            return;
+                        }
+                    }
+
+                    // Request camera access
+                    const constraints = {
+                        video: {
+                            facingMode: { ideal: 'environment' },
+                            width: { ideal: 1280, max: 1920 },
+                            height: { ideal: 720, max: 1080 }
+                        },
+                        audio: false
+                    };
+
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+                    // Initialize Quagga
+                    Quagga.init({
+                        inputStream: {
+                            name: "Live",
+                            type: "LiveStream",
+                            target: this.elements.scanner,
+                            constraints: {
+                                width: { min: 640, ideal: 1280 },
+                                height: { min: 480, ideal: 720 },
+                                facingMode: "environment"
+                            }
+                        },
+                        locator: {
+                            patchSize: "medium",
+                            halfSample: true
+                        },
+                        numOfWorkers: navigator.hardwareConcurrency || 2,
+                        decoder: {
+                            readers: [
+                                "ean_reader",
+                                "ean_8_reader",
+                                "code_128_reader",
+                                "code_39_reader"
+                            ]
+                        },
+                        locate: true
+                    }, (err) => {
+                        if (err) {
+                            console.error('Quagga init error:', err);
+                            this.showStatus('error', '❌ Error al inicializar escáner');
+                            return;
+                        }
+                        
+                        try {
+                            Quagga.start();
+                            this.isScanning = true;
+                            this.updateButtons();
+                            this.elements.scannerOverlay.style.display = 'block';
+                            this.showStatus('success', '✅ ¡Cámara activa! Apunta a códigos EAN');
+                            
+                            this.vibrate([100, 50, 100]);
+                            
+                            Quagga.onDetected((result) => {
+                                this.onBarcodeDetected(result);
+                            });
+
+                        } catch (startError) {
+                            console.error('Quagga start error:', startError);
+                            this.showStatus('error', '❌ Error al iniciar escáner');
+                        }
+                    });
+                    
+                } catch (error) {
+                    console.error('Camera access error:', error);
+                    
+                    let message = '❌ Error al acceder a la cámara';
+                    
+                    switch (error.name) {
+                        case 'NotAllowedError':
+                            message = '❌ Permisos de cámara denegados. Permite acceso y recarga.';
+                            break;
+                        case 'NotFoundError':
+                            message = '❌ No se encontró cámara en el dispositivo';
+                            break;
+                        case 'NotSupportedError':
+                            message = '❌ Tu navegador no soporta acceso a cámara';
+                            break;
+                        case 'SecurityError':
+                            message = '❌ Error de seguridad. Verifica permisos.';
+                            break;
+                    }
+                    
+                    this.showStatus('error', message);
+                }
+            }
+
+            stopScanning() {
+                if (this.isScanning) {
+                    try {
+                        Quagga.stop();
+                    } catch (error) {
+                        console.error('Error stopping scanner:', error);
+                    }
+                    
+                    this.isScanning = false;
+                    this.elements.scanner.innerHTML = `
+                        <div>
+                            📷 Presiona <strong>"INICIAR CÁMARA"</strong> para comenzar a escanear códigos EAN
+                            <br><br>
+                            <small>Apunta a códigos de barras EAN de celulares para extraer el IMEI</small>
+                        </div>
+                    `;
+                    this.elements.scannerOverlay.style.display = 'none';
+                    this.updateButtons();
+                    this.showStatus('info', '⏸️ Escáner detenido');
+                    this.vibrate([200]);
+                }
+            }
+
+            pauseScanning() {
+                if (this.isScanning) {
+                    Quagga.stop();
+                }
+            }
+
+            onBarcodeDetected(result) {
+                const code = result.codeResult.code;
+                
+                if (this.isValidIMEI(code)) {
+                    if (!this.scannedIMEIs.find(item => item.imei === code)) {
+                        this.addIMEI(code, 'Escaneado');
+                        this.vibrate([100, 50, 100, 50, 100]);
+                    } else {
+                        this.showStatus('error', `⚠️ IMEI duplicado: ${code}`);
+                        this.vibrate([300, 100, 300]);
+                    }
+                } else {
+                    // Check if it's a potential IMEI (12-17 digits)
+                    if (/^\d{12,17}$/.test(code)) {
+                        this.showStatus('error', `❌ Código ${code.length} dígitos: ${code} (necesita 15)`);
+                    } else {
+                        this.showStatus('error', `❌ Código inválido: ${code}`);
+                    }
+                    this.vibrate([500]);
+                }
+            }
+
+            addManualIMEI() {
+                const input = this.elements.manualInput;
+                const code = input.value.trim();
+                
+                if (this.isValidIMEI(code)) {
+                    if (!this.scannedIMEIs.find(item => item.imei === code)) {
+                        this.addIMEI(code, 'Manual');
+                        input.value = '';
+                        this.vibrate([100, 50, 100]);
+                    } else {
+                        this.showStatus('error', `⚠️ IMEI ya registrado: ${code}`);
+                        this.vibrate([300, 100, 300]);
+                    }
+                } else {
+                    this.showStatus('error', '❌ IMEI debe tener exactamente 15 dígitos');
+                    this.vibrate([500]);
+                }
+            }
+
+            addIMEI(code, source) {
+                const newIMEI = {
+                    imei: code,
+                    timestamp: new Date(),
+                    id: Date.now(),
+                    source: source
+                };
+                
+                this.scannedIMEIs.push(newIMEI);
+                this.updateDisplay();
+                this.saveToStorage();
+                this.showStatus('success', `✅ IMEI #${this.scannedIMEIs.length} agregado: ${code}`);
+                
+                // Scroll to bottom
+                setTimeout(() => {
+                    const container = this.elements.imeiContainer;
+                    container.scrollTop = container.scrollHeight;
+                }, 100);
+            }
+
+            isValidIMEI(code) {
+                return /^\d{15}$/.test(code);
+            }
+
+            vibrate(pattern) {
+                if (this.vibrationSupported) {
+                    navigator.vibrate(pattern);
+                }
+            }
+
+            updateButtons() {
+                this.elements.startBtn.disabled = this.isScanning;
+                this.elements.stopBtn.disabled = !this.isScanning;
+                this.elements.shareBtn.disabled = this.scannedIMEIs.length === 0;
+            }
+
+            updateDisplay() {
+                this.elements.imeiCount.textContent = this.scannedIMEIs.length;
+                this.elements.totalScanned.textContent = this.scannedIMEIs.length;
+                this.updateButtons();
+                
+                if (this.scannedIMEIs.length === 0) {
+                    this.elements.imeiContainer.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📱</div>
+                            <strong>No hay IMEI escaneados aún</strong><br>
+                            Utiliza la cámara para escanear códigos EAN o ingresa manualmente.
+                            <br><br>
+                            <small><em>Los IMEI deben tener exactamente 15 dígitos numéricos</em></small>
+                        </div>
+                    `;
+                } else {
+                    this.elements.imeiContainer.innerHTML = this.scannedIMEIs
+                        .map((item, index) => this.createIMEIElement(item, index + 1))
+                        .join('');
+                }
+            }
+
+            createIMEIElement(item, index) {
+                const formattedTime = item.timestamp.toLocaleString('es-ES', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                return `
+                    <div class="imei-item">
+                        <div class="imei-code">#${index.toString().padStart(3, '0')} - ${item.imei}</div>
+                        <div class="imei-meta">
+                            <span>${formattedTime}</span>
+                            <span class="imei-source">${item.source === 'Manual' ? '✍️ Manual' : '📷 Escaneado'}</span>
+                        </div>
+                        <button class="delete-btn" onclick="scanner.deleteIMEI(${item.id})">
+                            ✕
+                        </button>
+                    </div>
+                `;
+            }
+
+            deleteIMEI(id) {
+                if (confirm('¿Eliminar este IMEI?')) {
+                    this.scannedIMEIs = this.scannedIMEIs.filter(item => item.id !== id);
+                    this.updateDisplay();
+                    this.saveToStorage();
+                    this.showStatus('info', '🗑️ IMEI eliminado');
+                    this.vibrate([100]);
+                }
+            }
+
+            showShareModal() {
+                this.elements.modalOverlay.classList.add('show');
+                this.elements.shareModal.classList.add('show');
+            }
+
+            hideShareModal() {
+                this.elements.modalOverlay.classList.remove('show');
+                this.elements.shareModal.classList.remove('show');
+            }
+
+            downloadTxt() {
+                if (this.scannedIMEIs.length === 0) return;
+
+                const content = this.generateFileContent();
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                
+                const filename = `IMEI_Scanner_${new Date().toISOString().slice(0, 10)}_${Date.now()}.txt`;
+                
+                link.href = url;
+                link.download = filename;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                this.hideShareModal();
+                this.showStatus('success', `✅ Archivo descargado: ${filename}`);
+                this.vibrate([100, 50, 100]);
+            }
+
+            async shareNative() {
+                if (navigator.share) {
+                    try {
+                        const content = this.generateFileContent();
+                        await navigator.share({
+                            title: 'Registro de IMEI',
+                            text: content
+                        });
+                        this.hideShareModal();
+                        this.showStatus('success', '✅ Datos compartidos exitosamente');
+                    } catch (err) {
+                        if (err.name !== 'AbortError') {
+                            this.copyToClipboard();
+                        }
+                    }
+                } else {
+                    this.copyToClipboard();
+                }
+            }
+
+            async copyToClipboard() {
+                try {
+                    const content = this.generateFileContent();
+                    await navigator.clipboard.writeText(content);
+                    this.hideShareModal();
+                    this.showStatus('success', '✅ Datos copiados al portapapeles');
+                    this.vibrate([100, 50, 100]);
+                } catch (err) {
+                    this.showStatus('error', '❌ Error al copiar datos');
+                }
+            }
+
+            generateFileContent() {
+                const header = `REGISTRO DE IMEI - PWA Scanner\n` +
+                              `Fecha: ${new Date().toLocaleString('es-ES')}\n` +
+                              `Total de registros: ${this.scannedIMEIs.length}\n` +
+                              `Tiempo de sesión: ${this.elements.sessionTime.textContent}\n` +
+                              `Promedio por minuto: ${this.elements.avgPerMin.textContent}\n` +
+                              `${'='.repeat(60)}\n\n`;
+                
+                const content = this.scannedIMEIs
+                    .map((item, index) => 
+                        `${(index + 1).toString().padStart(3, '0')}. ${item.imei} | ${item.timestamp.toLocaleString('es-ES')} | ${item.source}`
+                    )
+                    .join('\n');
+                
+                const footer = `\n\n${'='.repeat(60)}\n` +
+                              `Generado por: IMEI Scanner PWA\n` +
+                              `Aplicación Web Progresiva\n` +
+                              `Total de IMEIs: ${this.scannedIMEIs.length}`;
+                
+                return header + content + footer;
+            }
+
+            clearAll() {
+                if (this.scannedIMEIs.length === 0) {
+                    this.showStatus('info', 'ℹ️ No hay datos para eliminar');
+                    return;
+                }
+                
+                if (confirm(`¿Eliminar todos los ${this.scannedIMEIs.length} IMEI registrados?\n\nEsta acción no se puede deshacer.`)) {
+                    this.scannedIMEIs = [];
+                    this.updateDisplay();
+                    this.saveToStorage();
+                    this.showStatus('info', '🗑️ Todos los registros eliminados');
+                    this.vibrate([200, 100, 200]);
+                }
+            }
+
+            showStatus(type, message) {
+                this.elements.status.className = `status ${type} show`;
+                this.elements.status.textContent = message;
+                
+                setTimeout(() => {
+                    this.elements.status.classList.remove('show');
+                }, 5000);
+            }
+
+            saveToStorage() {
+                try {
+                    const data = this.scannedIMEIs.map(item => ({
+                        ...item,
+                        timestamp: item.timestamp.toISOString()
+                    }));
+                    localStorage.setItem('pwaIMEIScanner', JSON.stringify(data));
+                } catch (error) {
+                    console.error('Storage error:', error);
+                }
+            }
+
+            loadFromStorage() {
+                try {
+                    const stored = localStorage.getItem('pwaIMEIScanner');
+                    if (stored) {
+                        const data = JSON.parse(stored);
+                        this.scannedIMEIs = data.map(item => ({
+                            ...item,
+                            timestamp: new Date(item.timestamp)
+                        }));
+                        this.updateDisplay();
+                    }
+                } catch (error) {
+                    console.error('Load storage error:', error);
+                }
+            }
+        }
+
+        // Initialize scanner
+        let scanner;
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                scanner = new PWAIMEIScanner();
+            });
+        } else {
+            scanner = new PWAIMEIScanner();
+        }
+
+        // Prevent accidental zoom
+        document.addEventListener('gesturestart', (e) => e.preventDefault());
+        document.addEventListener('gesturechange', (e) => e.preventDefault());
+        document.addEventListener('gestureend', (e) => e.preventDefault());
+
+        // Handle app install
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            scanner.showStatus('success', '✅ ¡App instalada correctamente!');
+        });
+    </script>
+</body>
+</html>
