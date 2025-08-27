@@ -77,66 +77,28 @@
         }
 
         .header h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
+            font-size: 2.2rem;
             font-weight: 700;
-        }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 1rem;
-        }
-
-        .app-status {
-            margin-top: 15px;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .content {
             flex: 1;
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
 
-        .camera-debug {
-            background: #f8f9fa;
-            border: 2px solid #dee2e6;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: #495057;
-            display: none;
-        }
-
-        .camera-debug.show {
-            display: block;
-        }
-
-        .camera-debug h4 {
-            color: #dc3545;
-            margin-bottom: 10px;
-        }
-
-        .debug-item {
-            margin: 5px 0;
-            padding: 5px;
-            background: white;
-            border-radius: 5px;
-        }
-
         .scanner-container {
             position: relative;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            height: 300px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            height: 350px;
             background: #000;
         }
 
@@ -147,10 +109,10 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             position: relative;
             text-align: center;
-            padding: 20px;
+            padding: 25px;
         }
 
         #scanner video {
@@ -169,18 +131,19 @@
         .scanner-message {
             position: relative;
             z-index: 10;
-            background: rgba(0,0,0,0.7);
-            padding: 15px;
-            border-radius: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 15px;
+            line-height: 1.5;
         }
 
         .scanner-overlay {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            bottom: 15px;
-            border: 3px solid #00ff00;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 4px solid #00ff00;
             border-radius: 15px;
             pointer-events: none;
             display: none;
@@ -193,39 +156,40 @@
             top: 50%;
             left: 15%;
             right: 15%;
-            height: 3px;
+            height: 4px;
             background: linear-gradient(90deg, transparent, #00ff00, transparent);
             animation: scan 2s linear infinite;
-            box-shadow: 0 0 15px #00ff00;
+            box-shadow: 0 0 20px #00ff00;
         }
 
         @keyframes scan {
-            0% { transform: translateY(-120px); opacity: 0; }
+            0% { transform: translateY(-150px); opacity: 0; }
             50% { opacity: 1; }
-            100% { transform: translateY(120px); opacity: 0; }
+            100% { transform: translateY(150px); opacity: 0; }
         }
 
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
+        .main-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .btn {
-            padding: 18px 20px;
+            padding: 20px 25px;
             border: none;
             border-radius: 15px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            min-height: 64px;
+            min-height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
             position: relative;
             overflow: hidden;
         }
@@ -251,15 +215,9 @@
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            grid-column: 1 / -1;
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-            color: white;
-        }
-
-        .btn-success {
             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
         }
@@ -267,6 +225,11 @@
         .btn-danger {
             background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
             color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+            color: #212529;
         }
 
         .btn:disabled {
@@ -278,52 +241,43 @@
             display: none;
         }
 
-        .stats {
+        .secondary-controls {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px 15px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            border-top: 4px solid #667eea;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            color: #6c757d;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 30px;
         }
 
         .manual-input {
-            background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 25px;
-            color: #212529;
+            color: white;
+            display: none;
+        }
+
+        .manual-input.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .manual-input h4 {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            text-align: center;
         }
 
         .manual-input input {
@@ -331,24 +285,112 @@
             padding: 18px;
             border: none;
             border-radius: 12px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             text-align: center;
             font-family: 'Courier New', monospace;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .manual-input .input-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
 
         .manual-input button {
-            width: 100%;
-            padding: 18px;
-            background: rgba(33, 37, 41, 0.8);
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-manual-btn {
+            background: rgba(255,255,255,0.9);
+            color: #28a745;
+        }
+
+        .cancel-manual-btn {
+            background: rgba(255,255,255,0.2);
             color: white;
+        }
+
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .confirmation-modal.show {
+            display: flex;
+        }
+
+        .confirmation-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .confirmation-content h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .imei-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #495057;
+            margin: 20px 0;
+            word-break: break-all;
+        }
+
+        .confirmation-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .confirm-btn {
+            padding: 15px 20px;
             border: none;
             border-radius: 12px;
             font-size: 1.1rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-yes {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-no {
+            background: #6c757d;
+            color: white;
         }
 
         .imei-list {
@@ -356,27 +398,27 @@
             border-radius: 20px;
             padding: 25px;
             flex: 1;
-            min-height: 350px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            min-height: 300px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         .imei-list h3 {
             color: #495057;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 700;
         }
 
         .count-badge {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 8px 15px;
+            padding: 10px 18px;
             border-radius: 25px;
-            font-size: 1rem;
-            min-width: 40px;
+            font-size: 1.1rem;
+            min-width: 50px;
             font-weight: 700;
         }
 
@@ -389,11 +431,11 @@
         .imei-item {
             background: #f8f9fa;
             padding: 20px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             border-radius: 15px;
             position: relative;
             transition: all 0.2s ease;
-            border-left: 4px solid #667eea;
+            border-left: 5px solid #667eea;
         }
 
         .imei-item:active {
@@ -403,7 +445,7 @@
 
         .imei-code {
             font-family: 'Courier New', monospace;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #495057;
             font-weight: bold;
             margin-bottom: 8px;
@@ -422,7 +464,7 @@
         .imei-source {
             background: #667eea;
             color: white;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 15px;
             font-size: 0.8rem;
             font-weight: 600;
@@ -435,12 +477,12 @@
             background: #dc3545;
             color: white;
             border: none;
-            padding: 10px;
+            padding: 12px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 0.9rem;
-            width: 40px;
-            height: 40px;
+            font-size: 1rem;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -457,11 +499,11 @@
             top: 25px;
             left: 20px;
             right: 20px;
-            padding: 18px 20px;
+            padding: 20px;
             border-radius: 15px;
             text-align: center;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
             z-index: 1000;
             transform: translateY(-120px);
             opacity: 0;
@@ -494,13 +536,13 @@
         .empty-state {
             text-align: center;
             color: #6c757d;
-            padding: 50px 20px;
+            padding: 60px 20px;
             line-height: 1.6;
         }
 
         .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: 5rem;
+            margin-bottom: 25px;
             opacity: 0.7;
         }
 
@@ -527,7 +569,7 @@
             margin-bottom: 25px;
             text-align: center;
             color: #495057;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
         }
 
@@ -558,7 +600,7 @@
         /* Responsive adjustments */
         @media (max-height: 700px) {
             .scanner-container {
-                height: 220px;
+                height: 280px;
             }
             
             .header {
@@ -566,11 +608,11 @@
             }
             
             .header h1 {
-                font-size: 1.7rem;
+                font-size: 1.8rem;
             }
             
             .content {
-                padding: 15px;
+                padding: 20px;
             }
         }
 
@@ -578,10 +620,6 @@
         @media (display-mode: standalone) {
             .pwa-install-banner {
                 display: none !important;
-            }
-            
-            .app-status::before {
-                content: "📱 ";
             }
         }
     </style>
@@ -591,72 +629,76 @@
     <div id="pwaInstallBanner" class="pwa-install-banner">
         <h4>📱 ¡Instalar como App!</h4>
         <p>Instala esta app en tu teléfono para una mejor experiencia</p>
-        <div class="pwa-buttons">
-            <button class="pwa-btn install" id="pwaInstallBtn" style="flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.9); color: #28a745;">✅ Instalar</button>
-            <button class="pwa-btn dismiss" id="pwaDismissBtn" style="flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.2); color: white; margin-left: 10px;">❌ Ahora no</button>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button id="pwaInstallBtn" style="flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.9); color: #28a745;">✅ Instalar</button>
+            <button id="pwaDismissBtn" style="flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.2); color: white;">❌ Ahora no</button>
+        </div>
+    </div>
+
+    <!-- IMEI Confirmation Modal -->
+    <div id="confirmationModal" class="confirmation-modal">
+        <div class="confirmation-content">
+            <h3>📱 IMEI Detectado</h3>
+            <p>Se escaneó el siguiente IMEI:</p>
+            <div id="detectedIMEI" class="imei-display">123456789012345</div>
+            <p><strong>¿Deseas escanear otro IMEI?</strong></p>
+            <div class="confirmation-buttons">
+                <button class="confirm-btn btn-yes" id="continueScanning">
+                    ✅ SÍ, CONTINUAR
+                </button>
+                <button class="confirm-btn btn-no" id="stopScanning">
+                    ❌ NO, DETENER
+                </button>
+            </div>
         </div>
     </div>
 
     <div class="container">
         <div class="header">
-            <h1>📱 IMEI Scanner</h1>
-            <p>Aplicación Web Progresiva</p>
-            <div class="app-status">
-                🌐 Versión Web - Se puede instalar como app
-            </div>
+            <h1>📱 Escáner IMEI</h1>
         </div>
 
         <div class="content">
             <div id="status" class="status"></div>
-
-            <!-- Camera Debug Panel -->
-            <div id="cameraDebug" class="camera-debug">
-                <h4>🔧 Diagnóstico de Cámara</h4>
-                <div id="debugItems"></div>
-                <button onclick="scanner.testCamera()" style="margin-top: 10px; padding: 8px 15px; background: #007bff; color: white; border: none; border-radius: 5px;">🔄 Probar Cámara</button>
-            </div>
-
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalScanned">0</div>
-                    <div class="stat-label">Total</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="sessionTime">00:00</div>
-                    <div class="stat-label">Tiempo</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="avgPerMin">0.0</div>
-                    <div class="stat-label">Por Min</div>
-                </div>
-            </div>
 
             <div class="scanner-container">
                 <div id="scanner">
                     <div class="scanner-message">
                         📷 Presiona <strong>"INICIAR CÁMARA"</strong> para comenzar a escanear códigos EAN
                         <br><br>
-                        <small>Apunta a códigos de barras EAN de celulares para extraer el IMEI</small>
+                        <small>Apunta a códigos de barras para extraer el IMEI automáticamente</small>
                     </div>
                 </div>
                 <div class="scanner-overlay" id="scannerOverlay"></div>
             </div>
 
-            <!-- Fallback manual input -->
-            <div class="manual-input">
-                <h4>✍️ Ingreso Manual (Backup)</h4>
-                <input type="text" id="manualInput" placeholder="Ej: 123456789012345 / 98 o 123456789012345" maxlength="25">
-                <button onclick="scanner.addManualIMEI()">➕ AGREGAR IMEI</button>
+            <!-- Input manual (inicialmente oculto) -->
+            <div id="manualInput" class="manual-input">
+                <h4>✍️ Ingreso Manual</h4>
+                <input type="text" id="manualIMEIInput" placeholder="Ej: 123456789012345 / 98 o 123456789012345" maxlength="25">
+                <div class="input-buttons">
+                    <button class="add-manual-btn" onclick="scanner.addManualIMEI()">
+                        ➕ AGREGAR
+                    </button>
+                    <button class="cancel-manual-btn" onclick="scanner.hideManualInput()">
+                        ❌ CANCELAR
+                    </button>
+                </div>
             </div>
 
-            <div class="controls">
+            <!-- Controles principales -->
+            <div class="main-controls">
                 <button class="btn btn-primary" id="startScanner">
-                    🚀 INICIAR CÁMARA
+                    📷 INICIAR CÁMARA
                 </button>
-                <button class="btn btn-secondary" id="stopScanner" disabled>
-                    ⏹️ DETENER
+                <button class="btn btn-secondary" id="showManualInput">
+                    ➕ AGREGAR IMEI
                 </button>
-                <button class="btn btn-success" id="shareData" disabled>
+            </div>
+
+            <!-- Controles secundarios -->
+            <div class="secondary-controls">
+                <button class="btn btn-warning" id="shareData" disabled>
                     📤 COMPARTIR
                 </button>
                 <button class="btn btn-danger" id="clearAll">
@@ -672,10 +714,12 @@
                 <div class="imei-container" id="imeiContainer">
                     <div class="empty-state">
                         <div class="empty-state-icon">📱</div>
-                        <strong>No hay IMEI escaneados aún</strong><br>
-                        Utiliza la cámara para escanear códigos EAN o ingresa manualmente.
+                        <strong>No hay IMEI registrados aún</strong><br>
+                        Utiliza la cámara para escanear códigos EAN o agrega manualmente.
                         <br><br>
-                        <small><em>Los IMEI deben tener exactamente 15 dígitos numéricos</em></small>
+                        <small><em>Formatos aceptados:</em></small><br>
+                        <small><code>123456789012345 / 98</code></small><br>
+                        <small><code>123456789012345</code></small>
                     </div>
                 </div>
             </div>
@@ -687,10 +731,10 @@
     <div class="share-modal" id="shareModal">
         <h3>📤 Exportar Datos</h3>
         <div class="share-options">
-            <button class="btn btn-success" id="downloadTxt">
+            <button class="btn btn-primary" id="downloadTxt">
                 📥 Descargar TXT
             </button>
-            <button class="btn btn-success" id="shareNative">
+            <button class="btn btn-primary" id="shareNative">
                 📱 Compartir
             </button>
             <button class="btn btn-secondary" id="copyToClipboard">
@@ -707,7 +751,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'imei-scanner-v2';
+                    const CACHE_NAME = 'imei-scanner-v3';
                     const urlsToCache = ['/'];
                     
                     self.addEventListener('install', event => {
@@ -748,7 +792,6 @@
             e.preventDefault();
             deferredPrompt = e;
             
-            // Show install banner after 3 seconds
             setTimeout(() => {
                 pwaInstallBanner.classList.add('show');
             }, 3000);
@@ -768,28 +811,24 @@
             pwaInstallBanner.classList.remove('show');
         });
 
-        // Main Scanner Class with Enhanced Camera Support
-        class EnhancedIMEIScanner {
+        // Enhanced IMEI Scanner with improved UX
+        class CleanIMEIScanner {
             constructor() {
                 this.scannedIMEIs = [];
                 this.isScanning = false;
-                this.sessionStartTime = Date.now();
-                this.sessionTimer = null;
-                this.debugMode = false;
                 this.stream = null;
+                this.lastDetectedIMEI = null;
                 
                 this.initializeElements();
                 this.bindEvents();
-                this.startSessionTimer();
                 this.loadFromStorage();
                 this.setupMobileOptimizations();
-                this.checkCameraSupport();
             }
 
             initializeElements() {
                 this.elements = {
                     startBtn: document.getElementById('startScanner'),
-                    stopBtn: document.getElementById('stopScanner'),
+                    showManualBtn: document.getElementById('showManualInput'),
                     shareBtn: document.getElementById('shareData'),
                     clearBtn: document.getElementById('clearAll'),
                     scanner: document.getElementById('scanner'),
@@ -797,9 +836,6 @@
                     status: document.getElementById('status'),
                     imeiContainer: document.getElementById('imeiContainer'),
                     imeiCount: document.getElementById('imeiCount'),
-                    totalScanned: document.getElementById('totalScanned'),
-                    sessionTime: document.getElementById('sessionTime'),
-                    avgPerMin: document.getElementById('avgPerMin'),
                     shareModal: document.getElementById('shareModal'),
                     modalOverlay: document.getElementById('modalOverlay'),
                     downloadBtn: document.getElementById('downloadTxt'),
@@ -807,19 +843,23 @@
                     copyBtn: document.getElementById('copyToClipboard'),
                     closeModal: document.getElementById('closeModal'),
                     manualInput: document.getElementById('manualInput'),
-                    cameraDebug: document.getElementById('cameraDebug'),
-                    debugItems: document.getElementById('debugItems')
+                    manualIMEIInput: document.getElementById('manualIMEIInput'),
+                    confirmationModal: document.getElementById('confirmationModal'),
+                    detectedIMEI: document.getElementById('detectedIMEI'),
+                    continueScanning: document.getElementById('continueScanning'),
+                    stopScanningBtn: document.getElementById('stopScanning')
                 };
             }
 
             bindEvents() {
                 this.elements.startBtn.addEventListener('click', () => this.startScanning());
-                this.elements.stopBtn.addEventListener('click', () => this.stopScanning());
+                this.elements.showManualBtn.addEventListener('click', () => this.showManualInput());
                 this.elements.shareBtn.addEventListener('click', () => this.showShareModal());
                 this.elements.clearBtn.addEventListener('click', () => this.clearAll());
                 
-                // Manual input - permitir cualquier carácter para formatos flexibles
-                // No filtrar caracteres, permitir formato completo como "123456789012345 / 98"
+                // Confirmation modal events
+                this.elements.continueScanning.addEventListener('click', () => this.continueScanningAfterDetection());
+                this.elements.stopScanningBtn.addEventListener('click', () => this.stopScanningAfterDetection());
 
                 // Modal events
                 this.elements.downloadBtn.addEventListener('click', () => this.downloadTxt());
@@ -827,12 +867,6 @@
                 this.elements.copyBtn.addEventListener('click', () => this.copyToClipboard());
                 this.elements.closeModal.addEventListener('click', () => this.hideShareModal());
                 this.elements.modalOverlay.addEventListener('click', () => this.hideShareModal());
-
-                // Double tap to show debug
-                this.elements.startBtn.addEventListener('dblclick', () => {
-                    this.debugMode = !this.debugMode;
-                    this.elements.cameraDebug.classList.toggle('show', this.debugMode);
-                });
 
                 // Handle page visibility
                 document.addEventListener('visibilitychange', () => {
@@ -846,90 +880,20 @@
                 this.vibrationSupported = 'vibrate' in navigator;
             }
 
-            async checkCameraSupport() {
-                this.addDebugItem('🔍 Verificando soporte de cámara...');
-                
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    this.addDebugItem('❌ getUserMedia no soportado');
-                    this.showStatus('error', '❌ Tu navegador no soporta acceso a cámara');
-                    return;
-                }
-                
-                this.addDebugItem('✅ getUserMedia soportado');
-                
-                try {
-                    const devices = await navigator.mediaDevices.enumerateDevices();
-                    const videoDevices = devices.filter(device => device.kind === 'videoinput');
-                    this.addDebugItem(`📹 ${videoDevices.length} cámaras encontradas`);
-                    
-                    if (videoDevices.length === 0) {
-                        this.addDebugItem('❌ No se encontraron cámaras');
-                        this.showStatus('error', '❌ No se encontraron cámaras en el dispositivo');
-                    }
-                } catch (error) {
-                    this.addDebugItem(`❌ Error enumerando dispositivos: ${error.message}`);
-                }
+            showManualInput() {
+                this.elements.manualInput.classList.add('show');
+                this.elements.manualIMEIInput.focus();
+                this.vibrate([100]);
             }
 
-            addDebugItem(message) {
-                if (this.elements.debugItems) {
-                    const item = document.createElement('div');
-                    item.className = 'debug-item';
-                    item.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
-                    this.elements.debugItems.appendChild(item);
-                }
-                console.log(`[Camera Debug] ${message}`);
-            }
-
-            async testCamera() {
-                this.addDebugItem('🔄 Probando acceso a cámara...');
-                
-                try {
-                    const constraints = {
-                        video: { 
-                            facingMode: 'environment',
-                            width: { ideal: 640 },
-                            height: { ideal: 480 }
-                        }
-                    };
-
-                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                    this.addDebugItem('✅ Acceso a cámara exitoso');
-                    
-                    const videoTracks = stream.getVideoTracks();
-                    if (videoTracks.length > 0) {
-                        const track = videoTracks[0];
-                        this.addDebugItem(`📹 Usando: ${track.label}`);
-                        this.addDebugItem(`📐 Resolución: ${track.getSettings().width}x${track.getSettings().height}`);
-                    }
-                    
-                    // Detener stream de prueba
-                    stream.getTracks().forEach(track => track.stop());
-                    
-                } catch (error) {
-                    this.addDebugItem(`❌ Error probando cámara: ${error.name} - ${error.message}`);
-                    this.showStatus('error', `Error cámara: ${error.name}`);
-                }
-            }
-
-            startSessionTimer() {
-                this.sessionTimer = setInterval(() => {
-                    const elapsed = Date.now() - this.sessionStartTime;
-                    const minutes = Math.floor(elapsed / 60000);
-                    const seconds = Math.floor((elapsed % 60000) / 1000);
-                    this.elements.sessionTime.textContent = 
-                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                    
-                    // Calculate average per minute
-                    const totalMinutes = elapsed / 60000;
-                    const avgPerMin = totalMinutes > 0 ? (this.scannedIMEIs.length / totalMinutes).toFixed(1) : '0.0';
-                    this.elements.avgPerMin.textContent = avgPerMin;
-                }, 1000);
+            hideManualInput() {
+                this.elements.manualInput.classList.remove('show');
+                this.elements.manualIMEIInput.value = '';
+                this.vibrate([100]);
             }
 
             async startScanning() {
                 try {
-                    this.addDebugItem('🚀 Iniciando proceso de escaneo...');
                     this.showStatus('info', '🔄 Activando cámara...');
                     
                     // Limpiar cualquier stream anterior
@@ -947,9 +911,7 @@
                         audio: false
                     };
 
-                    this.addDebugItem('📱 Solicitando acceso a cámara...');
                     this.stream = await navigator.mediaDevices.getUserMedia(constraints);
-                    this.addDebugItem('✅ Stream de cámara obtenido');
 
                     // Limpiar el contenido del scanner
                     this.elements.scanner.innerHTML = '';
@@ -971,17 +933,14 @@
                     // Esperar a que el video cargue
                     await new Promise((resolve, reject) => {
                         video.onloadedmetadata = () => {
-                            this.addDebugItem('📹 Video metadata cargada');
                             video.play()
                                 .then(() => {
-                                    this.addDebugItem('▶️ Video reproduciéndose');
                                     resolve();
                                 })
                                 .catch(reject);
                         };
                         
                         video.onerror = (e) => {
-                            this.addDebugItem(`❌ Error en video: ${e}`);
                             reject(new Error('Error loading video'));
                         };
                         
@@ -990,9 +949,7 @@
                         }, 10000);
                     });
 
-                    // Configurar Quagga con el elemento video
-                    this.addDebugItem('🔧 Inicializando Quagga...');
-                    
+                    // Configurar Quagga
                     Quagga.init({
                         inputStream: {
                             name: "Live",
@@ -1019,18 +976,14 @@
                         locate: true
                     }, (err) => {
                         if (err) {
-                            this.addDebugItem(`❌ Error Quagga init: ${err.message || err}`);
                             console.error('Quagga init error:', err);
                             this.showStatus('error', '❌ Error al inicializar escáner');
                             this.stopStream();
                             return;
                         }
                         
-                        this.addDebugItem('✅ Quagga inicializado correctamente');
-                        
                         try {
                             Quagga.start();
-                            this.addDebugItem('🎬 Quagga iniciado');
                             
                             this.isScanning = true;
                             this.updateButtons();
@@ -1044,7 +997,6 @@
                             });
 
                         } catch (startError) {
-                            this.addDebugItem(`❌ Error iniciando Quagga: ${startError.message}`);
                             console.error('Quagga start error:', startError);
                             this.showStatus('error', '❌ Error al iniciar escáner');
                             this.stopStream();
@@ -1052,7 +1004,6 @@
                     });
                     
                 } catch (error) {
-                    this.addDebugItem(`❌ Error completo: ${error.name} - ${error.message}`);
                     console.error('Camera access error:', error);
                     
                     let message = '❌ Error al acceder a la cámara';
@@ -1081,13 +1032,10 @@
 
             stopScanning() {
                 if (this.isScanning) {
-                    this.addDebugItem('⏹️ Deteniendo escáner...');
-                    
                     try {
                         Quagga.stop();
-                        this.addDebugItem('✅ Quagga detenido');
                     } catch (error) {
-                        this.addDebugItem(`❌ Error deteniendo Quagga: ${error.message}`);
+                        console.error('Error stopping Quagga:', error);
                     }
                     
                     this.stopStream();
@@ -1097,7 +1045,7 @@
                         <div class="scanner-message">
                             📷 Presiona <strong>"INICIAR CÁMARA"</strong> para comenzar a escanear códigos EAN
                             <br><br>
-                            <small>Apunta a códigos de barras EAN de celulares para extraer el IMEI</small>
+                            <small>Apunta a códigos de barras para extraer el IMEI automáticamente</small>
                         </div>
                     `;
                     this.elements.scannerOverlay.style.display = 'none';
@@ -1111,7 +1059,6 @@
                 if (this.stream) {
                     this.stream.getTracks().forEach(track => {
                         track.stop();
-                        this.addDebugItem(`🔌 Track detenido: ${track.kind}`);
                     });
                     this.stream = null;
                 }
@@ -1119,22 +1066,27 @@
 
             pauseScanning() {
                 if (this.isScanning) {
-                    this.addDebugItem('⏸️ Pausando escáner...');
                     Quagga.stop();
                 }
             }
 
             onBarcodeDetected(result) {
                 const rawCode = result.codeResult.code;
-                this.addDebugItem(`📊 Código detectado: ${rawCode}`);
                 
-                // Extraer IMEI del código (formato: "123456789012345 / 98")
+                // Extraer IMEI del código
                 const extractedIMEI = this.extractIMEI(rawCode);
-                this.addDebugItem(`🔍 IMEI extraído: ${extractedIMEI || 'No válido'}`);
                 
                 if (extractedIMEI) {
+                    // Verificar si ya existe
                     if (!this.scannedIMEIs.find(item => item.imei === extractedIMEI)) {
-                        this.addIMEI(extractedIMEI, 'Escaneado');
+                        // Agregar IMEI y mostrar modal de confirmación
+                        this.addIMEI(extractedIMEI, 'Escaneado', rawCode !== extractedIMEI ? rawCode : null);
+                        this.lastDetectedIMEI = extractedIMEI;
+                        
+                        // Pausar escáner y mostrar confirmación
+                        this.pauseScanning();
+                        this.showConfirmationModal(extractedIMEI);
+                        
                         this.vibrate([100, 50, 100, 50, 100]);
                     } else {
                         this.showStatus('error', `⚠️ IMEI duplicado: ${extractedIMEI}`);
@@ -1146,8 +1098,92 @@
                 }
             }
 
+            showConfirmationModal(imei) {
+                this.elements.detectedIMEI.textContent = imei;
+                this.elements.confirmationModal.classList.add('show');
+            }
+
+            hideConfirmationModal() {
+                this.elements.confirmationModal.classList.remove('show');
+            }
+
+            continueScanningAfterDetection() {
+                this.hideConfirmationModal();
+                
+                // Reiniciar el escáner
+                if (this.isScanning) {
+                    try {
+                        Quagga.start();
+                        this.showStatus('info', '🔄 Continuando escaneo...');
+                    } catch (error) {
+                        console.error('Error restarting scanner:', error);
+                        this.showStatus('error', '❌ Error al continuar escáner');
+                    }
+                }
+            }
+
+            stopScanningAfterDetection() {
+                this.hideConfirmationModal();
+                this.stopScanning();
+            }
+
+            extractIMEI(rawCode) {
+                // Remover espacios al inicio y final
+                let cleanCode = rawCode.trim();
+                
+                // Formato común: "123456789012345 / 98" 
+                if (cleanCode.includes(' / ')) {
+                    const parts = cleanCode.split(' / ');
+                    const potentialIMEI = parts[0].trim();
+                    
+                    if (this.isValidIMEI(potentialIMEI)) {
+                        return potentialIMEI;
+                    }
+                }
+                
+                // Formato alternativo: "123456789012345/98" (sin espacios)
+                if (cleanCode.includes('/')) {
+                    const parts = cleanCode.split('/');
+                    const potentialIMEI = parts[0].trim();
+                    
+                    if (this.isValidIMEI(potentialIMEI)) {
+                        return potentialIMEI;
+                    }
+                }
+                
+                // Formato con otros separadores comunes
+                const separators = ['-', '_', '|', '\\', ' '];
+                for (const sep of separators) {
+                    if (cleanCode.includes(sep)) {
+                        const parts = cleanCode.split(sep);
+                        for (const part of parts) {
+                            const potentialIMEI = part.trim();
+                            if (this.isValidIMEI(potentialIMEI)) {
+                                return potentialIMEI;
+                            }
+                        }
+                    }
+                }
+                
+                // Intentar extraer 15 dígitos consecutivos del código
+                const digitMatch = cleanCode.match(/(\d{15})/);
+                if (digitMatch) {
+                    const potentialIMEI = digitMatch[1];
+                    if (this.isValidIMEI(potentialIMEI)) {
+                        return potentialIMEI;
+                    }
+                }
+                
+                // Si el código completo es exactamente 15 dígitos
+                if (this.isValidIMEI(cleanCode)) {
+                    return cleanCode;
+                }
+                
+                return null;
+            }
+
             addManualIMEI() {
-                const input = this.elements.manualInput;
+                const input = this.elements.manualIMEIInput;
                 const rawCode = input.value.trim();
                 
                 // Intentar extraer IMEI del código ingresado
@@ -1155,14 +1191,10 @@
                 
                 if (extractedIMEI) {
                     if (!this.scannedIMEIs.find(item => item.imei === extractedIMEI)) {
-                        this.addIMEI(extractedIMEI, 'Manual');
+                        this.addIMEI(extractedIMEI, 'Manual', rawCode !== extractedIMEI ? rawCode : null);
                         input.value = '';
+                        this.hideManualInput();
                         this.vibrate([100, 50, 100]);
-                        
-                        // Mostrar qué se extrajo si era diferente del input
-                        if (rawCode !== extractedIMEI) {
-                            this.showStatus('success', `✅ IMEI extraído: ${extractedIMEI} (de: ${rawCode})`);
-                        }
                     } else {
                         this.showStatus('error', `⚠️ IMEI ya registrado: ${extractedIMEI}`);
                         this.vibrate([300, 100, 300]);
@@ -1179,91 +1211,18 @@
                     timestamp: new Date(),
                     id: Date.now(),
                     source: source,
-                    originalCode: originalCode // Para mostrar el código original si es diferente
+                    originalCode: originalCode
                 };
                 
                 this.scannedIMEIs.push(newIMEI);
                 this.updateDisplay();
                 this.saveToStorage();
                 
-                // Mostrar mensaje con código original si es diferente
-                let message = `✅ IMEI #${this.scannedIMEIs.length} agregado: ${code}`;
-                if (originalCode && originalCode !== code) {
-                    message += ` (extraído de: ${originalCode})`;
-                }
-                
-                this.showStatus('success', message);
-                this.addDebugItem(`✅ IMEI agregado: ${code} (${source})`);
-                
                 // Scroll to bottom
                 setTimeout(() => {
                     const container = this.elements.imeiContainer;
                     container.scrollTop = container.scrollHeight;
                 }, 100);
-            }
-
-            extractIMEI(rawCode) {
-                // Función para extraer IMEI de diferentes formatos de códigos EAN
-                this.addDebugItem(`🔧 Analizando código: "${rawCode}"`);
-                
-                // Remover espacios al inicio y final
-                let cleanCode = rawCode.trim();
-                
-                // Formato común: "123456789012345 / 98" 
-                if (cleanCode.includes(' / ')) {
-                    const parts = cleanCode.split(' / ');
-                    const potentialIMEI = parts[0].trim();
-                    this.addDebugItem(`📱 Formato "IMEI / XX" detectado: ${potentialIMEI}`);
-                    
-                    if (this.isValidIMEI(potentialIMEI)) {
-                        return potentialIMEI;
-                    }
-                }
-                
-                // Formato alternativo: "123456789012345/98" (sin espacios)
-                if (cleanCode.includes('/')) {
-                    const parts = cleanCode.split('/');
-                    const potentialIMEI = parts[0].trim();
-                    this.addDebugItem(`📱 Formato "IMEI/XX" detectado: ${potentialIMEI}`);
-                    
-                    if (this.isValidIMEI(potentialIMEI)) {
-                        return potentialIMEI;
-                    }
-                }
-                
-                // Formato con otros separadores comunes
-                const separators = ['-', '_', '|', '\\', ' '];
-                for (const sep of separators) {
-                    if (cleanCode.includes(sep)) {
-                        const parts = cleanCode.split(sep);
-                        for (const part of parts) {
-                            const potentialIMEI = part.trim();
-                            if (this.isValidIMEI(potentialIMEI)) {
-                                this.addDebugItem(`📱 IMEI encontrado con separador "${sep}": ${potentialIMEI}`);
-                                return potentialIMEI;
-                            }
-                        }
-                    }
-                }
-                
-                // Intentar extraer 15 dígitos consecutivos del código
-                const digitMatch = cleanCode.match(/(\d{15})/);
-                if (digitMatch) {
-                    const potentialIMEI = digitMatch[1];
-                    this.addDebugItem(`📱 15 dígitos consecutivos encontrados: ${potentialIMEI}`);
-                    if (this.isValidIMEI(potentialIMEI)) {
-                        return potentialIMEI;
-                    }
-                }
-                
-                // Si el código completo es exactamente 15 dígitos
-                if (this.isValidIMEI(cleanCode)) {
-                    this.addDebugItem(`📱 Código completo es IMEI válido: ${cleanCode}`);
-                    return cleanCode;
-                }
-                
-                this.addDebugItem(`❌ No se pudo extraer IMEI válido`);
-                return null;
             }
 
             isValidIMEI(code) {
@@ -1278,21 +1237,20 @@
 
             updateButtons() {
                 this.elements.startBtn.disabled = this.isScanning;
-                this.elements.stopBtn.disabled = !this.isScanning;
+                this.elements.startBtn.textContent = this.isScanning ? '📷 ESCANEANDO...' : '📷 INICIAR CÁMARA';
                 this.elements.shareBtn.disabled = this.scannedIMEIs.length === 0;
             }
 
             updateDisplay() {
                 this.elements.imeiCount.textContent = this.scannedIMEIs.length;
-                this.elements.totalScanned.textContent = this.scannedIMEIs.length;
                 this.updateButtons();
                 
                 if (this.scannedIMEIs.length === 0) {
                     this.elements.imeiContainer.innerHTML = `
                         <div class="empty-state">
                             <div class="empty-state-icon">📱</div>
-                            <strong>No hay IMEI escaneados aún</strong><br>
-                            Utiliza la cámara para escanear códigos EAN o ingresa manualmente.
+                            <strong>No hay IMEI registrados aún</strong><br>
+                            Utiliza la cámara para escanear códigos EAN o agrega manualmente.
                             <br><br>
                             <small><em>Formatos aceptados:</em></small><br>
                             <small><code>123456789012345 / 98</code></small><br>
@@ -1314,9 +1272,14 @@
                     minute: '2-digit'
                 });
 
+                // Mostrar código original si existe y es diferente del IMEI
+                const originalCodeDisplay = item.originalCode && item.originalCode !== item.imei 
+                    ? `<div style="font-size: 0.85rem; color: #6c757d; font-family: monospace; margin-top: 8px; opacity: 0.8;">Original: ${item.originalCode}</div>`
+                    : '';
+
                 return `
                     <div class="imei-item">
-                        <div class="imei-code">#${index.toString().padStart(3, '0')} - ${item.imei}</div>
+                        <div class="imei-code">#${index.toString().padStart(3, '0')} - ${item.imei}${originalCodeDisplay}</div>
                         <div class="imei-meta">
                             <span>${formattedTime}</span>
                             <span class="imei-source">${item.source === 'Manual' ? '✍️ Manual' : '📷 Escaneado'}</span>
@@ -1404,22 +1367,23 @@
             }
 
             generateFileContent() {
-                const header = `REGISTRO DE IMEI - PWA Scanner Enhanced\n` +
+                const header = `REGISTRO DE IMEI - Escáner PWA\n` +
                               `Fecha: ${new Date().toLocaleString('es-ES')}\n` +
                               `Total de registros: ${this.scannedIMEIs.length}\n` +
-                              `Tiempo de sesión: ${this.elements.sessionTime.textContent}\n` +
-                              `Promedio por minuto: ${this.elements.avgPerMin.textContent}\n` +
                               `${'='.repeat(60)}\n\n`;
                 
                 const content = this.scannedIMEIs
-                    .map((item, index) => 
-                        `${(index + 1).toString().padStart(3, '0')}. ${item.imei} | ${item.timestamp.toLocaleString('es-ES')} | ${item.source}`
-                    )
+                    .map((item, index) => {
+                        let line = `${(index + 1).toString().padStart(3, '0')}. ${item.imei} | ${item.timestamp.toLocaleString('es-ES')} | ${item.source}`;
+                        if (item.originalCode && item.originalCode !== item.imei) {
+                            line += ` | Original: ${item.originalCode}`;
+                        }
+                        return line;
+                    })
                     .join('\n');
                 
                 const footer = `\n\n${'='.repeat(60)}\n` +
-                              `Generado por: IMEI Scanner PWA Enhanced\n` +
-                              `Aplicación Web Progresiva con diagnóstico\n` +
+                              `Generado por: IMEI Scanner PWA\n` +
                               `Total de IMEIs: ${this.scannedIMEIs.length}`;
                 
                 return header + content + footer;
@@ -1455,7 +1419,7 @@
                         ...item,
                         timestamp: item.timestamp.toISOString()
                     }));
-                    localStorage.setItem('enhancedIMEIScanner', JSON.stringify(data));
+                    localStorage.setItem('cleanIMEIScanner', JSON.stringify(data));
                 } catch (error) {
                     console.error('Storage error:', error);
                 }
@@ -1463,7 +1427,7 @@
 
             loadFromStorage() {
                 try {
-                    const stored = localStorage.getItem('enhancedIMEIScanner');
+                    const stored = localStorage.getItem('cleanIMEIScanner');
                     if (stored) {
                         const data = JSON.parse(stored);
                         this.scannedIMEIs = data.map(item => ({
@@ -1483,10 +1447,10 @@
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                scanner = new EnhancedIMEIScanner();
+                scanner = new CleanIMEIScanner();
             });
         } else {
-            scanner = new EnhancedIMEIScanner();
+            scanner = new CleanIMEIScanner();
         }
 
         // Prevent accidental zoom
