@@ -58,43 +58,6 @@
             opacity: 1;
         }
 
-        .pwa-install-banner h4 {
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-
-        .pwa-install-banner p {
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            opacity: 0.9;
-        }
-
-        .pwa-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .pwa-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .pwa-btn.install {
-            background: rgba(255,255,255,0.9);
-            color: #28a745;
-        }
-
-        .pwa-btn.dismiss {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-
         .container {
             width: 100%;
             min-height: 100vh;
@@ -140,6 +103,33 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        .camera-debug {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #495057;
+            display: none;
+        }
+
+        .camera-debug.show {
+            display: block;
+        }
+
+        .camera-debug h4 {
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+
+        .debug-item {
+            margin: 5px 0;
+            padding: 5px;
+            background: white;
+            border-radius: 5px;
+        }
+
         .scanner-container {
             position: relative;
             margin-bottom: 25px;
@@ -147,7 +137,7 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             height: 300px;
-            background: #f8f9fa;
+            background: #000;
         }
 
         #scanner {
@@ -156,7 +146,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #6c757d;
+            color: white;
             font-size: 1.1rem;
             position: relative;
             text-align: center;
@@ -167,6 +157,21 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #scanner canvas {
+            display: none !important;
+        }
+
+        .scanner-message {
+            position: relative;
+            z-index: 10;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
         }
 
         .scanner-overlay {
@@ -175,10 +180,11 @@
             left: 15px;
             right: 15px;
             bottom: 15px;
-            border: 3px solid #667eea;
+            border: 3px solid #00ff00;
             border-radius: 15px;
             pointer-events: none;
             display: none;
+            z-index: 15;
         }
 
         .scanner-overlay::before {
@@ -188,9 +194,9 @@
             left: 15%;
             right: 15%;
             height: 3px;
-            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            background: linear-gradient(90deg, transparent, #00ff00, transparent);
             animation: scan 2s linear infinite;
-            box-shadow: 0 0 15px #667eea;
+            box-shadow: 0 0 15px #00ff00;
         }
 
         @keyframes scan {
@@ -304,6 +310,45 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        .manual-input {
+            background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: #212529;
+        }
+
+        .manual-input h4 {
+            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .manual-input input {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .manual-input button {
+            width: 100%;
+            padding: 18px;
+            background: rgba(33, 37, 41, 0.8);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .imei-list {
@@ -510,46 +555,6 @@
             pointer-events: all;
         }
 
-        /* Manual input fallback */
-        .manual-input {
-            background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            color: #212529;
-        }
-
-        .manual-input h4 {
-            margin-bottom: 15px;
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-
-        .manual-input input {
-            width: 100%;
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.2rem;
-            text-align: center;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .manual-input button {
-            width: 100%;
-            padding: 18px;
-            background: rgba(33, 37, 41, 0.8);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
         /* Responsive adjustments */
         @media (max-height: 700px) {
             .scanner-container {
@@ -566,17 +571,6 @@
             
             .content {
                 padding: 15px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .stats {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            
-            .stat-card:last-child {
-                grid-column: 1 / -1;
             }
         }
 
@@ -598,8 +592,8 @@
         <h4>📱 ¡Instalar como App!</h4>
         <p>Instala esta app en tu teléfono para una mejor experiencia</p>
         <div class="pwa-buttons">
-            <button class="pwa-btn install" id="pwaInstallBtn">✅ Instalar</button>
-            <button class="pwa-btn dismiss" id="pwaDismissBtn">❌ Ahora no</button>
+            <button class="pwa-btn install" id="pwaInstallBtn" style="flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.9); color: #28a745;">✅ Instalar</button>
+            <button class="pwa-btn dismiss" id="pwaDismissBtn" style="flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.2); color: white; margin-left: 10px;">❌ Ahora no</button>
         </div>
     </div>
 
@@ -614,6 +608,13 @@
 
         <div class="content">
             <div id="status" class="status"></div>
+
+            <!-- Camera Debug Panel -->
+            <div id="cameraDebug" class="camera-debug">
+                <h4>🔧 Diagnóstico de Cámara</h4>
+                <div id="debugItems"></div>
+                <button onclick="scanner.testCamera()" style="margin-top: 10px; padding: 8px 15px; background: #007bff; color: white; border: none; border-radius: 5px;">🔄 Probar Cámara</button>
+            </div>
 
             <div class="stats">
                 <div class="stat-card">
@@ -632,7 +633,7 @@
 
             <div class="scanner-container">
                 <div id="scanner">
-                    <div>
+                    <div class="scanner-message">
                         📷 Presiona <strong>"INICIAR CÁMARA"</strong> para comenzar a escanear códigos EAN
                         <br><br>
                         <small>Apunta a códigos de barras EAN de celulares para extraer el IMEI</small>
@@ -706,7 +707,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'imei-scanner-v1';
+                    const CACHE_NAME = 'imei-scanner-v2';
                     const urlsToCache = ['/'];
                     
                     self.addEventListener('install', event => {
@@ -767,19 +768,22 @@
             pwaInstallBanner.classList.remove('show');
         });
 
-        // Main Scanner Class
-        class PWAIMEIScanner {
+        // Main Scanner Class with Enhanced Camera Support
+        class EnhancedIMEIScanner {
             constructor() {
                 this.scannedIMEIs = [];
                 this.isScanning = false;
                 this.sessionStartTime = Date.now();
                 this.sessionTimer = null;
+                this.debugMode = false;
+                this.stream = null;
                 
                 this.initializeElements();
                 this.bindEvents();
                 this.startSessionTimer();
                 this.loadFromStorage();
                 this.setupMobileOptimizations();
+                this.checkCameraSupport();
             }
 
             initializeElements() {
@@ -802,7 +806,9 @@
                     shareNative: document.getElementById('shareNative'),
                     copyBtn: document.getElementById('copyToClipboard'),
                     closeModal: document.getElementById('closeModal'),
-                    manualInput: document.getElementById('manualInput')
+                    manualInput: document.getElementById('manualInput'),
+                    cameraDebug: document.getElementById('cameraDebug'),
+                    debugItems: document.getElementById('debugItems')
                 };
             }
 
@@ -824,6 +830,12 @@
                 this.elements.closeModal.addEventListener('click', () => this.hideShareModal());
                 this.elements.modalOverlay.addEventListener('click', () => this.hideShareModal());
 
+                // Double tap to show debug
+                this.elements.startBtn.addEventListener('dblclick', () => {
+                    this.debugMode = !this.debugMode;
+                    this.elements.cameraDebug.classList.toggle('show', this.debugMode);
+                });
+
                 // Handle page visibility
                 document.addEventListener('visibilitychange', () => {
                     if (document.visibilityState === 'hidden' && this.isScanning) {
@@ -834,6 +846,72 @@
 
             setupMobileOptimizations() {
                 this.vibrationSupported = 'vibrate' in navigator;
+            }
+
+            async checkCameraSupport() {
+                this.addDebugItem('🔍 Verificando soporte de cámara...');
+                
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    this.addDebugItem('❌ getUserMedia no soportado');
+                    this.showStatus('error', '❌ Tu navegador no soporta acceso a cámara');
+                    return;
+                }
+                
+                this.addDebugItem('✅ getUserMedia soportado');
+                
+                try {
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                    this.addDebugItem(`📹 ${videoDevices.length} cámaras encontradas`);
+                    
+                    if (videoDevices.length === 0) {
+                        this.addDebugItem('❌ No se encontraron cámaras');
+                        this.showStatus('error', '❌ No se encontraron cámaras en el dispositivo');
+                    }
+                } catch (error) {
+                    this.addDebugItem(`❌ Error enumerando dispositivos: ${error.message}`);
+                }
+            }
+
+            addDebugItem(message) {
+                if (this.elements.debugItems) {
+                    const item = document.createElement('div');
+                    item.className = 'debug-item';
+                    item.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+                    this.elements.debugItems.appendChild(item);
+                }
+                console.log(`[Camera Debug] ${message}`);
+            }
+
+            async testCamera() {
+                this.addDebugItem('🔄 Probando acceso a cámara...');
+                
+                try {
+                    const constraints = {
+                        video: { 
+                            facingMode: 'environment',
+                            width: { ideal: 640 },
+                            height: { ideal: 480 }
+                        }
+                    };
+
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    this.addDebugItem('✅ Acceso a cámara exitoso');
+                    
+                    const videoTracks = stream.getVideoTracks();
+                    if (videoTracks.length > 0) {
+                        const track = videoTracks[0];
+                        this.addDebugItem(`📹 Usando: ${track.label}`);
+                        this.addDebugItem(`📐 Resolución: ${track.getSettings().width}x${track.getSettings().height}`);
+                    }
+                    
+                    // Detener stream de prueba
+                    stream.getTracks().forEach(track => track.stop());
+                    
+                } catch (error) {
+                    this.addDebugItem(`❌ Error probando cámara: ${error.name} - ${error.message}`);
+                    this.showStatus('error', `Error cámara: ${error.name}`);
+                }
             }
 
             startSessionTimer() {
@@ -853,64 +931,109 @@
 
             async startScanning() {
                 try {
+                    this.addDebugItem('🚀 Iniciando proceso de escaneo...');
                     this.showStatus('info', '🔄 Activando cámara...');
                     
-                    // Check camera permissions
-                    if (navigator.permissions) {
-                        const permissions = await navigator.permissions.query({name: 'camera'});
-                        if (permissions.state === 'denied') {
-                            this.showStatus('error', '❌ Permisos de cámara denegados');
-                            return;
-                        }
+                    // Limpiar cualquier stream anterior
+                    if (this.stream) {
+                        this.stream.getTracks().forEach(track => track.stop());
                     }
 
-                    // Request camera access
+                    // Configuración optimizada para Android
                     const constraints = {
                         video: {
-                            facingMode: { ideal: 'environment' },
-                            width: { ideal: 1280, max: 1920 },
-                            height: { ideal: 720, max: 1080 }
+                            facingMode: 'environment',
+                            width: { ideal: 640, max: 1280 },
+                            height: { ideal: 480, max: 720 }
                         },
                         audio: false
                     };
 
-                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    this.addDebugItem('📱 Solicitando acceso a cámara...');
+                    this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    this.addDebugItem('✅ Stream de cámara obtenido');
 
-                    // Initialize Quagga
+                    // Limpiar el contenido del scanner
+                    this.elements.scanner.innerHTML = '';
+
+                    // Crear y configurar elemento video
+                    const video = document.createElement('video');
+                    video.setAttribute('playsinline', true);
+                    video.setAttribute('autoplay', true);
+                    video.setAttribute('muted', true);
+                    video.style.width = '100%';
+                    video.style.height = '100%';
+                    video.style.objectFit = 'cover';
+                    
+                    this.elements.scanner.appendChild(video);
+                    
+                    // Conectar stream al video
+                    video.srcObject = this.stream;
+                    
+                    // Esperar a que el video cargue
+                    await new Promise((resolve, reject) => {
+                        video.onloadedmetadata = () => {
+                            this.addDebugItem('📹 Video metadata cargada');
+                            video.play()
+                                .then(() => {
+                                    this.addDebugItem('▶️ Video reproduciéndose');
+                                    resolve();
+                                })
+                                .catch(reject);
+                        };
+                        
+                        video.onerror = (e) => {
+                            this.addDebugItem(`❌ Error en video: ${e}`);
+                            reject(new Error('Error loading video'));
+                        };
+                        
+                        setTimeout(() => {
+                            reject(new Error('Video load timeout'));
+                        }, 10000);
+                    });
+
+                    // Configurar Quagga con el elemento video
+                    this.addDebugItem('🔧 Inicializando Quagga...');
+                    
                     Quagga.init({
                         inputStream: {
                             name: "Live",
                             type: "LiveStream",
                             target: this.elements.scanner,
                             constraints: {
-                                width: { min: 640, ideal: 1280 },
-                                height: { min: 480, ideal: 720 },
+                                width: { min: 320, ideal: 640 },
+                                height: { min: 240, ideal: 480 },
                                 facingMode: "environment"
                             }
                         },
                         locator: {
                             patchSize: "medium",
-                            halfSample: true
+                            halfSample: false
                         },
-                        numOfWorkers: navigator.hardwareConcurrency || 2,
+                        numOfWorkers: 1,
                         decoder: {
                             readers: [
                                 "ean_reader",
                                 "ean_8_reader",
-                                "code_128_reader",
-                                "code_39_reader"
+                                "code_128_reader"
                             ]
                         },
                         locate: true
                     }, (err) => {
                         if (err) {
+                            this.addDebugItem(`❌ Error Quagga init: ${err.message || err}`);
                             console.error('Quagga init error:', err);
                             this.showStatus('error', '❌ Error al inicializar escáner');
+                            this.stopStream();
                             return;
                         }
                         
+                        this.addDebugItem('✅ Quagga inicializado correctamente');
+                        
                         try {
                             Quagga.start();
+                            this.addDebugItem('🎬 Quagga iniciado');
+                            
                             this.isScanning = true;
                             this.updateButtons();
                             this.elements.scannerOverlay.style.display = 'block';
@@ -923,19 +1046,22 @@
                             });
 
                         } catch (startError) {
+                            this.addDebugItem(`❌ Error iniciando Quagga: ${startError.message}`);
                             console.error('Quagga start error:', startError);
                             this.showStatus('error', '❌ Error al iniciar escáner');
+                            this.stopStream();
                         }
                     });
                     
                 } catch (error) {
+                    this.addDebugItem(`❌ Error completo: ${error.name} - ${error.message}`);
                     console.error('Camera access error:', error);
                     
                     let message = '❌ Error al acceder a la cámara';
                     
                     switch (error.name) {
                         case 'NotAllowedError':
-                            message = '❌ Permisos de cámara denegados. Permite acceso y recarga.';
+                            message = '❌ Permisos denegados. Ve a configuración → Permisos → Cámara';
                             break;
                         case 'NotFoundError':
                             message = '❌ No se encontró cámara en el dispositivo';
@@ -944,25 +1070,33 @@
                             message = '❌ Tu navegador no soporta acceso a cámara';
                             break;
                         case 'SecurityError':
-                            message = '❌ Error de seguridad. Verifica permisos.';
+                            message = '❌ Error de seguridad. ¿Conexión HTTPS?';
                             break;
+                        default:
+                            message = `❌ Error: ${error.message}`;
                     }
                     
                     this.showStatus('error', message);
+                    this.stopStream();
                 }
             }
 
             stopScanning() {
                 if (this.isScanning) {
+                    this.addDebugItem('⏹️ Deteniendo escáner...');
+                    
                     try {
                         Quagga.stop();
+                        this.addDebugItem('✅ Quagga detenido');
                     } catch (error) {
-                        console.error('Error stopping scanner:', error);
+                        this.addDebugItem(`❌ Error deteniendo Quagga: ${error.message}`);
                     }
+                    
+                    this.stopStream();
                     
                     this.isScanning = false;
                     this.elements.scanner.innerHTML = `
-                        <div>
+                        <div class="scanner-message">
                             📷 Presiona <strong>"INICIAR CÁMARA"</strong> para comenzar a escanear códigos EAN
                             <br><br>
                             <small>Apunta a códigos de barras EAN de celulares para extraer el IMEI</small>
@@ -975,14 +1109,26 @@
                 }
             }
 
+            stopStream() {
+                if (this.stream) {
+                    this.stream.getTracks().forEach(track => {
+                        track.stop();
+                        this.addDebugItem(`🔌 Track detenido: ${track.kind}`);
+                    });
+                    this.stream = null;
+                }
+            }
+
             pauseScanning() {
                 if (this.isScanning) {
+                    this.addDebugItem('⏸️ Pausando escáner...');
                     Quagga.stop();
                 }
             }
 
             onBarcodeDetected(result) {
                 const code = result.codeResult.code;
+                this.addDebugItem(`📊 Código detectado: ${code}`);
                 
                 if (this.isValidIMEI(code)) {
                     if (!this.scannedIMEIs.find(item => item.imei === code)) {
@@ -1034,6 +1180,7 @@
                 this.updateDisplay();
                 this.saveToStorage();
                 this.showStatus('success', `✅ IMEI #${this.scannedIMEIs.length} agregado: ${code}`);
+                this.addDebugItem(`✅ IMEI agregado: ${code} (${source})`);
                 
                 // Scroll to bottom
                 setTimeout(() => {
@@ -1178,7 +1325,7 @@
             }
 
             generateFileContent() {
-                const header = `REGISTRO DE IMEI - PWA Scanner\n` +
+                const header = `REGISTRO DE IMEI - PWA Scanner Enhanced\n` +
                               `Fecha: ${new Date().toLocaleString('es-ES')}\n` +
                               `Total de registros: ${this.scannedIMEIs.length}\n` +
                               `Tiempo de sesión: ${this.elements.sessionTime.textContent}\n` +
@@ -1192,8 +1339,8 @@
                     .join('\n');
                 
                 const footer = `\n\n${'='.repeat(60)}\n` +
-                              `Generado por: IMEI Scanner PWA\n` +
-                              `Aplicación Web Progresiva\n` +
+                              `Generado por: IMEI Scanner PWA Enhanced\n` +
+                              `Aplicación Web Progresiva con diagnóstico\n` +
                               `Total de IMEIs: ${this.scannedIMEIs.length}`;
                 
                 return header + content + footer;
@@ -1229,7 +1376,7 @@
                         ...item,
                         timestamp: item.timestamp.toISOString()
                     }));
-                    localStorage.setItem('pwaIMEIScanner', JSON.stringify(data));
+                    localStorage.setItem('enhancedIMEIScanner', JSON.stringify(data));
                 } catch (error) {
                     console.error('Storage error:', error);
                 }
@@ -1237,7 +1384,7 @@
 
             loadFromStorage() {
                 try {
-                    const stored = localStorage.getItem('pwaIMEIScanner');
+                    const stored = localStorage.getItem('enhancedIMEIScanner');
                     if (stored) {
                         const data = JSON.parse(stored);
                         this.scannedIMEIs = data.map(item => ({
@@ -1257,10 +1404,10 @@
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                scanner = new PWAIMEIScanner();
+                scanner = new EnhancedIMEIScanner();
             });
         } else {
-            scanner = new PWAIMEIScanner();
+            scanner = new EnhancedIMEIScanner();
         }
 
         // Prevent accidental zoom
