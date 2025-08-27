@@ -645,7 +645,7 @@
             <!-- Fallback manual input -->
             <div class="manual-input">
                 <h4>✍️ Ingreso Manual (Backup)</h4>
-                <input type="text" id="manualInput" placeholder="Ingresa IMEI (15 dígitos)" maxlength="15" pattern="[0-9]{15}">
+                <input type="text" id="manualInput" placeholder="Ej: 123456789012345 / 98 o 123456789012345" maxlength="25">
                 <button onclick="scanner.addManualIMEI()">➕ AGREGAR IMEI</button>
             </div>
 
@@ -818,10 +818,8 @@
                 this.elements.shareBtn.addEventListener('click', () => this.showShareModal());
                 this.elements.clearBtn.addEventListener('click', () => this.clearAll());
                 
-                // Manual input
-                this.elements.manualInput.addEventListener('input', (e) => {
-                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                });
+                // Manual input - permitir cualquier carácter para formatos flexibles
+                // No filtrar caracteres, permitir formato completo como "123456789012345 / 98"
 
                 // Modal events
                 this.elements.downloadBtn.addEventListener('click', () => this.downloadTxt());
@@ -1127,59 +1125,74 @@
             }
 
             onBarcodeDetected(result) {
-                const code = result.codeResult.code;
-                this.addDebugItem(`📊 Código detectado: ${code}`);
+                const rawCode = result.codeResult.code;
+                this.addDebugItem(`📊 Código detectado: ${rawCode}`);
                 
-                if (this.isValidIMEI(code)) {
-                    if (!this.scannedIMEIs.find(item => item.imei === code)) {
-                        this.addIMEI(code, 'Escaneado');
+                // Extraer IMEI del código (formato: "123456789012345 / 98")
+                const extractedIMEI = this.extractIMEI(rawCode);
+                this.addDebugItem(`🔍 IMEI extraído: ${extractedIMEI || 'No válido'}`);
+                
+                if (extractedIMEI) {
+                    if (!this.scannedIMEIs.find(item => item.imei === extractedIMEI)) {
+                        this.addIMEI(extractedIMEI, 'Escaneado');
                         this.vibrate([100, 50, 100, 50, 100]);
                     } else {
-                        this.showStatus('error', `⚠️ IMEI duplicado: ${code}`);
+                        this.showStatus('error', `⚠️ IMEI duplicado: ${extractedIMEI}`);
                         this.vibrate([300, 100, 300]);
                     }
                 } else {
-                    // Check if it's a potential IMEI (12-17 digits)
-                    if (/^\d{12,17}$/.test(code)) {
-                        this.showStatus('error', `❌ Código ${code.length} dígitos: ${code} (necesita 15)`);
-                    } else {
-                        this.showStatus('error', `❌ Código inválido: ${code}`);
-                    }
+                    this.showStatus('error', `❌ No se encontró IMEI válido en: ${rawCode}`);
                     this.vibrate([500]);
                 }
             }
 
             addManualIMEI() {
                 const input = this.elements.manualInput;
-                const code = input.value.trim();
+                const rawCode = input.value.trim();
                 
-                if (this.isValidIMEI(code)) {
-                    if (!this.scannedIMEIs.find(item => item.imei === code)) {
-                        this.addIMEI(code, 'Manual');
+                // Intentar extraer IMEI del código ingresado
+                const extractedIMEI = this.extractIMEI(rawCode);
+                
+                if (extractedIMEI) {
+                    if (!this.scannedIMEIs.find(item => item.imei === extractedIMEI)) {
+                        this.addIMEI(extractedIMEI, 'Manual');
                         input.value = '';
                         this.vibrate([100, 50, 100]);
+                        
+                        // Mostrar qué se extrajo si era diferente del input
+                        if (rawCode !== extractedIMEI) {
+                            this.showStatus('success', `✅ IMEI extraído: ${extractedIMEI} (de: ${rawCode})`);
+                        }
                     } else {
-                        this.showStatus('error', `⚠️ IMEI ya registrado: ${code}`);
+                        this.showStatus('error', `⚠️ IMEI ya registrado: ${extractedIMEI}`);
                         this.vibrate([300, 100, 300]);
                     }
                 } else {
-                    this.showStatus('error', '❌ IMEI debe tener exactamente 15 dígitos');
+                    this.showStatus('error', `❌ No se encontró IMEI válido en: "${rawCode}"`);
                     this.vibrate([500]);
                 }
             }
 
-            addIMEI(code, source) {
+            addIMEI(code, source, originalCode = null) {
                 const newIMEI = {
                     imei: code,
                     timestamp: new Date(),
                     id: Date.now(),
-                    source: source
+                    source: source,
+                    originalCode: originalCode // Para mostrar el código original si es diferente
                 };
                 
                 this.scannedIMEIs.push(newIMEI);
                 this.updateDisplay();
                 this.saveToStorage();
-                this.showStatus('success', `✅ IMEI #${this.scannedIMEIs.length} agregado: ${code}`);
+                
+                // Mostrar mensaje con código original si es diferente
+                let message = `✅ IMEI #${this.scannedIMEIs.length} agregado: ${code}`;
+                if (originalCode && originalCode !== code) {
+                    message += ` (extraído de: ${originalCode})`;
+                }
+                
+                this.showStatus('success', message);
                 this.addDebugItem(`✅ IMEI agregado: ${code} (${source})`);
                 
                 // Scroll to bottom
@@ -1187,6 +1200,70 @@
                     const container = this.elements.imeiContainer;
                     container.scrollTop = container.scrollHeight;
                 }, 100);
+            }
+
+            extractIMEI(rawCode) {
+                // Función para extraer IMEI de diferentes formatos de códigos EAN
+                this.addDebugItem(`🔧 Analizando código: "${rawCode}"`);
+                
+                // Remover espacios al inicio y final
+                let cleanCode = rawCode.trim();
+                
+                // Formato común: "123456789012345 / 98" 
+                if (cleanCode.includes(' / ')) {
+                    const parts = cleanCode.split(' / ');
+                    const potentialIMEI = parts[0].trim();
+                    this.addDebugItem(`📱 Formato "IMEI / XX" detectado: ${potentialIMEI}`);
+                    
+                    if (this.isValidIMEI(potentialIMEI)) {
+                        return potentialIMEI;
+                    }
+                }
+                
+                // Formato alternativo: "123456789012345/98" (sin espacios)
+                if (cleanCode.includes('/')) {
+                    const parts = cleanCode.split('/');
+                    const potentialIMEI = parts[0].trim();
+                    this.addDebugItem(`📱 Formato "IMEI/XX" detectado: ${potentialIMEI}`);
+                    
+                    if (this.isValidIMEI(potentialIMEI)) {
+                        return potentialIMEI;
+                    }
+                }
+                
+                // Formato con otros separadores comunes
+                const separators = ['-', '_', '|', '\\', ' '];
+                for (const sep of separators) {
+                    if (cleanCode.includes(sep)) {
+                        const parts = cleanCode.split(sep);
+                        for (const part of parts) {
+                            const potentialIMEI = part.trim();
+                            if (this.isValidIMEI(potentialIMEI)) {
+                                this.addDebugItem(`📱 IMEI encontrado con separador "${sep}": ${potentialIMEI}`);
+                                return potentialIMEI;
+                            }
+                        }
+                    }
+                }
+                
+                // Intentar extraer 15 dígitos consecutivos del código
+                const digitMatch = cleanCode.match(/(\d{15})/);
+                if (digitMatch) {
+                    const potentialIMEI = digitMatch[1];
+                    this.addDebugItem(`📱 15 dígitos consecutivos encontrados: ${potentialIMEI}`);
+                    if (this.isValidIMEI(potentialIMEI)) {
+                        return potentialIMEI;
+                    }
+                }
+                
+                // Si el código completo es exactamente 15 dígitos
+                if (this.isValidIMEI(cleanCode)) {
+                    this.addDebugItem(`📱 Código completo es IMEI válido: ${cleanCode}`);
+                    return cleanCode;
+                }
+                
+                this.addDebugItem(`❌ No se pudo extraer IMEI válido`);
+                return null;
             }
 
             isValidIMEI(code) {
@@ -1217,7 +1294,9 @@
                             <strong>No hay IMEI escaneados aún</strong><br>
                             Utiliza la cámara para escanear códigos EAN o ingresa manualmente.
                             <br><br>
-                            <small><em>Los IMEI deben tener exactamente 15 dígitos numéricos</em></small>
+                            <small><em>Formatos aceptados:</em></small><br>
+                            <small><code>123456789012345 / 98</code></small><br>
+                            <small><code>123456789012345</code></small>
                         </div>
                     `;
                 } else {
